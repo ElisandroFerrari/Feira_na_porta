@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR" class="auth-pending">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#173b2b">
+  <meta name="description" content="Painel administrativo da Feira na Porta.">
+  <title>Painel da proprietária — Feira na Porta</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <script>try{if(localStorage.getItem('feira-na-porta-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(error){console.error('Não foi possível restaurar o tema:',error)}</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/tailwind-config.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <script type="module">
+    import('./js/access.js')
+      .then(({ requireRole }) => requireRole('admin'))
+      .catch((error) => {
+        console.error('Não foi possível carregar a validação de acesso:', error);
+        window.alert('Não foi possível validar seu acesso. Tente novamente.');
+        window.location.replace('index.html');
+      });
+  </script>
+</head>
+<body class="min-h-screen bg-[#fbfaf6] text-[#21352a] antialiased">
+  <header class="border-b border-forest-900/10 bg-white">
+    <div class="site-header-inner mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <a href="index.html" class="flex items-center gap-2.5" aria-label="Feira na Porta">
+        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-forest-900 text-xl text-harvest-300">✳</span>
+        <span><span class="block font-display text-xl leading-none text-forest-900">Feira na Porta</span><span class="mt-1 block text-[10px] font-semibold uppercase tracking-[.18em] text-forest-600">Painel da proprietária</span></span>
+      </a>
+      <div class="site-header-actions flex items-center gap-2">
+        <a href="client.html" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Ver catálogo</a>
+        <button type="button" data-theme-toggle class="grid h-10 w-10 place-items-center rounded-full border border-forest-900/15 text-lg hover:bg-forest-50" aria-label="Ativar tema escuro" title="Ativar tema escuro">🌙</button>
+        <button id="logout-button" class="rounded-full bg-forest-900 px-4 py-2 text-sm font-semibold text-white hover:bg-forest-700">Sair</button>
+      </div>
+    </div>
+  </header>
+  <main class="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-10 lg:px-8">
+    <div class="mb-8">
+      <p class="text-xs font-extrabold uppercase tracking-[.2em] text-forest-600">Área restrita</p>
+      <h1 class="mt-2 font-display text-[clamp(2rem,7vw,3rem)] text-forest-900">Painel administrativo</h1>
+      <p class="mt-3 text-sm leading-6 text-forest-900/60">Gerencie o catálogo, acompanhe pedidos e consulte seus clientes.</p>
+    </div>
+    <nav class="mb-6 flex flex-wrap gap-2 border-b border-forest-900/10 pb-4" aria-label="Seções administrativas">
+      <button type="button" data-admin-tab="products" class="rounded-full bg-forest-900 px-4 py-2 text-sm font-semibold text-white">Produtos</button>
+      <button type="button" data-admin-tab="orders" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Histórico de vendas</button>
+      <button type="button" data-admin-tab="customers" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Clientes cadastrados</button>
+      <button type="button" data-admin-tab="profile" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Meu perfil</button>
+    </nav>
+    <div id="products-panel" class="grid items-start gap-6 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)]">
+      <section class="rounded-3xl border border-forest-900/[.07] bg-white p-5 shadow-card sm:p-7">
+        <div class="flex items-center justify-between gap-3">
+          <div><p class="text-xs font-bold uppercase tracking-[.16em] text-forest-600">Catálogo</p><h2 id="form-title" class="mt-1 font-display text-2xl text-forest-900">Adicionar produto</h2></div>
+          <span class="grid h-11 w-11 place-items-center rounded-2xl bg-harvest-100 text-xl">🥬</span>
+        </div>
+        <form id="product-form" class="mt-6 space-y-4">
+          <input name="id" type="hidden">
+          <label class="block text-sm font-semibold text-forest-900">Nome do produto
+            <input name="nome" maxlength="100" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900">Descrição
+            <textarea name="descricao" maxlength="500" rows="3" class="mt-2 w-full rounded-xl border border-forest-900/10 px-3 py-2 font-normal outline-none focus:border-forest-500" placeholder="Conte um pouco sobre o produto"></textarea>
+          </label>
+          <label class="block text-sm font-semibold text-forest-900">Categoria
+            <input name="categoria" maxlength="50" required value="Outros" class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <fieldset class="rounded-2xl border border-forest-900/10 p-3 sm:p-4">
+            <legend class="px-1 text-sm font-semibold text-forest-900">Opções de preço</legend>
+            <p class="mb-3 text-xs leading-5 text-forest-900/55">Adicione cada embalagem ou unidade com seu próprio preço.</p>
+            <div id="prices-container" class="space-y-3"></div>
+            <button id="add-price-button" type="button" class="mt-3 rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">+ Adicionar preço</button>
+          </fieldset>
+          <label class="block text-sm font-semibold text-forest-900">URL da imagem <span class="font-normal text-forest-900/50">(opcional)</span>
+            <input name="imagem_url" type="url" class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500" placeholder="https://...">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900">Ou envie uma imagem
+            <input name="imagem_arquivo" type="file" accept="image/*" class="mt-2 block w-full rounded-xl border border-forest-900/10 bg-white p-2 text-sm font-normal file:mr-3 file:rounded-lg file:border-0 file:bg-forest-50 file:px-3 file:py-2 file:font-semibold file:text-forest-900">
+            <span class="mt-1 block text-xs font-normal text-forest-900/50">Imagem até 5 MB. O arquivo enviado tem prioridade sobre a URL.</span>
+          </label>
+          <p id="form-error" class="hidden rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert"></p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button id="save-button" type="submit" class="min-h-11 rounded-full bg-forest-900 px-5 font-bold text-white hover:bg-forest-700 disabled:opacity-50">Salvar produto</button>
+            <button id="cancel-edit" type="button" class="hidden min-h-11 rounded-full border border-forest-900/15 px-5 font-semibold hover:bg-forest-50">Cancelar edição</button>
+          </div>
+        </form>
+      </section>
+      <section class="rounded-3xl border border-forest-900/[.07] bg-white p-5 shadow-card sm:p-7">
+        <div class="flex items-end justify-between gap-3">
+          <div><p class="text-xs font-bold uppercase tracking-[.16em] text-forest-600">Produtos cadastrados</p><h2 class="mt-1 font-display text-2xl text-forest-900">Seu catálogo</h2><p id="product-count" class="mt-1 text-sm text-forest-900/55">Carregando...</p></div>
+          <button id="refresh-button" type="button" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Atualizar</button>
+        </div>
+        <p id="list-error" class="mt-4 hidden rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert"></p>
+        <div id="product-list" class="mt-5 divide-y divide-forest-900/10 rounded-2xl border border-forest-900/10"></div>
+      </section>
+    </div>
+    <section id="orders-panel" class="hidden rounded-3xl border border-forest-900/[.07] bg-white p-5 shadow-card sm:p-7">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div><p class="text-xs font-bold uppercase tracking-[.16em] text-forest-600">Pedidos registrados</p><h2 class="mt-1 font-display text-2xl text-forest-900">Histórico de vendas</h2><p id="orders-count" class="mt-1 text-sm text-forest-900/55">Carregando...</p></div>
+        <button id="refresh-orders" type="button" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Atualizar</button>
+      </div>
+      <p id="orders-error" class="mt-4 hidden rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert"></p>
+      <div class="mt-5 overflow-x-auto rounded-2xl border border-forest-900/10">
+        <table class="w-full min-w-[900px] text-left text-sm">
+          <thead class="bg-forest-50 text-xs uppercase tracking-wide text-forest-900/60"><tr><th class="p-3">Pedido / data</th><th class="p-3">Cliente</th><th class="p-3">Produtos</th><th class="p-3">Total</th><th class="p-3">Entrega</th><th class="p-3">Status: Pendente, Concluído ou Cancelado</th></tr></thead>
+          <tbody id="orders-table" class="divide-y divide-forest-900/10"></tbody>
+        </table>
+      </div>
+    </section>
+    <section id="customers-panel" class="hidden rounded-3xl border border-forest-900/[.07] bg-white p-5 shadow-card sm:p-7">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div><p class="text-xs font-bold uppercase tracking-[.16em] text-forest-600">Contas de clientes</p><h2 class="mt-1 font-display text-2xl text-forest-900">Clientes cadastrados</h2><p id="customers-count" class="mt-1 text-sm text-forest-900/55">Carregando...</p></div>
+        <button id="refresh-customers" type="button" class="rounded-full border border-forest-900/15 px-4 py-2 text-sm font-semibold hover:bg-forest-50">Atualizar</button>
+      </div>
+      <p id="customers-error" class="mt-4 hidden rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert"></p>
+      <div class="mt-5 overflow-x-auto rounded-2xl border border-forest-900/10">
+        <table class="w-full min-w-[760px] text-left text-sm">
+          <thead class="bg-forest-50 text-xs uppercase tracking-wide text-forest-900/60"><tr><th class="p-3">Nome</th><th class="p-3">E-mail</th><th class="p-3">Telefone</th><th class="p-3">Endereço</th></tr></thead>
+          <tbody id="customers-table" class="divide-y divide-forest-900/10"></tbody>
+        </table>
+      </div>
+    </section>
+    <section id="profile-panel" class="hidden space-y-6">
+      <div class="rounded-3xl border border-forest-900/[.07] bg-white p-5 shadow-card sm:p-7">
+        <p class="text-xs font-bold uppercase tracking-[.16em] text-forest-600">Dados da proprietária</p>
+        <h2 class="mt-1 font-display text-2xl text-forest-900">Meu perfil e contato da feira</h2>
+        <p class="mt-2 text-sm leading-6 text-forest-900/60">O telefone salvo aqui será usado no botão de WhatsApp do site e para receber os pedidos.</p>
+        <form id="admin-profile-form" class="mt-5 grid gap-4 sm:grid-cols-2">
+          <label class="block text-sm font-semibold text-forest-900 sm:col-span-2">Nome completo
+            <input name="full_name" type="text" autocomplete="name" maxlength="100" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900 sm:col-span-2">Telefone / WhatsApp da feira
+            <input name="phone" type="tel" autocomplete="tel" maxlength="20" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500" placeholder="+55 (00) 00000-0000">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900 sm:col-span-2">Rua
+            <input name="street" type="text" autocomplete="street-address" maxlength="120" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900">Número
+            <input name="house_number" type="text" autocomplete="address-line2" maxlength="20" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900">Bairro
+            <input name="neighborhood" type="text" autocomplete="address-level3" maxlength="80" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900 sm:col-span-2">Cidade
+            <input name="city" type="text" autocomplete="address-level2" maxlength="80" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <p id="admin-profile-message" class="hidden rounded-xl p-3 text-sm sm:col-span-2" role="status" aria-live="polite"></p>
+          <button type="submit" class="min-h-11 justify-self-start rounded-full bg-forest-900 px-5 font-bold text-white hover:bg-forest-700 disabled:opacity-50">Salvar perfil e contato</button>
+        </form>
+      </div>
+      <div class="rounded-3xl border border-forest-900/[.07] bg-white p-5 shadow-card sm:p-7">
+        <h2 class="font-display text-2xl text-forest-900">E-mail e senha</h2>
+        <p id="admin-current-email" class="mt-2 text-sm text-forest-900/60"></p>
+        <form id="admin-security-form" class="mt-5 space-y-4">
+          <label class="block text-sm font-semibold text-forest-900">E-mail da conta
+            <input name="email" type="email" autocomplete="email" required class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500">
+          </label>
+          <label class="block text-sm font-semibold text-forest-900">Nova senha <span class="font-normal text-forest-900/50">(opcional, mínimo 8 caracteres)</span>
+            <input name="password" type="password" autocomplete="new-password" minlength="8" class="mt-2 h-11 w-full rounded-xl border border-forest-900/10 px-3 font-normal outline-none focus:border-forest-500" placeholder="Deixe em branco para manter">
+          </label>
+          <p id="admin-security-message" class="hidden rounded-xl p-3 text-sm" role="status" aria-live="polite"></p>
+          <button type="submit" class="min-h-11 rounded-full border border-forest-900/15 px-5 font-semibold hover:bg-forest-50 disabled:opacity-50">Atualizar e-mail ou senha</button>
+        </form>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/theme.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#173b2b"/>
+  <circle cx="1050" cy="100" r="280" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
+  <circle cx="1050" cy="100" r="210" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
+  <rect x="92" y="118" width="82" height="82" rx="26" fill="#fbfaf6"/>
+  <path d="M133 132 137 151 155 141 143 158 162 162 143 166 155 183 137 173 133 192 129 173 111 183 123 166 104 162 123 158 111 141 129 151Z" fill="#173b2b"/>
+  <text x="92" y="294" fill="#f6d779" font-family="Arial,sans-serif" font-size="24" font-weight="700" letter-spacing="6">FRESQUINHO, DO NOSSO JEITO</text>
+  <text x="88" y="385" fill="#ffffff" font-family="Georgia,serif" font-size="66" font-weight="700">Feira na Porta</text>
+  <text x="92" y="445" fill="#ffffff" fill-opacity=".8" font-family="Arial,sans-serif" font-size="28">Frutas, verduras e legumes fresquinhos</text>
+  <text x="92" y="486" fill="#ffffff" fill-opacity=".8" font-family="Arial,sans-serif" font-size="28">entregues com carinho na sua casa.</text>
+  <path d="M922 383c0-84 68-152 152-152s152 68 152 152v85H922z" fill="#f6d779"/>
+  <path d="M976 368c0-54 44-98 98-98s98 44 98 98v100H976z" fill="#e3eee1"/>
+  <path d="M1016 340c28-44 88-48 119-5-31 41-91 46-119 5Z" fill="#498254"/>
+  <path d="M1075 351v40" stroke="#285737" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="1002" cy="475" r="25" fill="#173b2b"/>
+  <circle cx="1148" cy="475" r="25" fill="#173b2b"/>
+  <circle cx="1002" cy="475" r="10" fill="#f2f7f1"/>
+  <circle cx="1148" cy="475" r="10" fill="#f2f7f1"/>
+</svg>
