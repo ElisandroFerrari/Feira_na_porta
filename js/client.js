@@ -190,10 +190,10 @@ async function fetchProducts() {
 
 $('#search-input').addEventListener('input', renderProducts);
 $('#share-store-button').addEventListener('click', async () => {
-  const shareUrl = new URL('index.html#signup-form', window.location.href).href;
+  const shareUrl = new URL('/#signup-form', window.location.origin).href;
   const shareData = {
     title: 'Feira na Porta',
-    text: 'Conheça a Feira na Porta e cadastre-se para escolher produtos fresquinhos.',
+    text: 'Conheça a Feira na Porta: cadastre-se e escolha frutas, verduras e legumes fresquinhos.',
     url: shareUrl
   };
   const status = $('#share-message');

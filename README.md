@@ -2,7 +2,7 @@
 
 Aplicação multipágina para a feira: apresentação e autenticação em `index.html`, gestão restrita do catálogo em `admin.html` e catálogo/carrinho do cliente em `client.html`. A proprietária também pode abrir o catálogo pela área administrativa para visualizar a loja. A interface usa HTML, Tailwind via CDN e JavaScript ES modules, com Supabase Auth, Database e Storage.
 
-As áreas do cliente e administrativa têm alternância de tema claro/escuro; a escolha fica salva no navegador e também é aplicada à página de perfil. A página inicial inclui favicon e metadados Open Graph/Twitter com uma imagem de compartilhamento. Ao hospedar o site, configure `og:image` e `twitter:image` com a URL absoluta pública de `assets/social-card.svg` para garantir que redes sociais consigam carregar a prévia.
+As áreas do cliente e administrativa têm alternância de tema claro/escuro; a escolha fica salva no navegador e também é aplicada à página de perfil. O botão de compartilhamento do catálogo envia para a página pública de cadastro. A página inicial inclui metadados Open Graph/Twitter com URLs absolutas e uma imagem PNG de 1200 × 630 para as prévias nas redes sociais; atualize o domínio canônico e as URLs das imagens em `index.html` se hospedar o projeto em outro endereço.
 
 Os layouts adaptam o grid do catálogo, cabeçalhos, formulários e tabelas a telas pequenas e grandes. A preferência por movimento reduzido é respeitada, e as tabelas administrativas mantêm rolagem horizontal própria em telas estreitas.
 
