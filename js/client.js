@@ -3,6 +3,9 @@ import { formatMoney, safeImageUrl, supabase, whatsappNumber } from './supabase.
 const $ = (selector) => document.querySelector(selector);
 const CART_STORAGE_KEY = 'feira-na-porta-cart-v2';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=700&q=80';
+// Configure both values with matching Pix payment details before enabling Pix checkout.
+const PIX_COPY_PASTE = '';
+const PIX_QR_CODE_URL = '';
 let products = [];
 let cart = loadCart();
 let checkoutBusy = false;
@@ -173,6 +176,43 @@ function renderCart() {
   $('#checkout-button').disabled = cart.length === 0;
 }
 
+function updatePaymentMethod() {
+  const isPix = $('#payment-method').value === 'pix';
+  $('#pix-payment').classList.toggle('hidden', !isPix);
+  $('#checkout-button-label').textContent = isPix
+    ? 'Já fiz o pagamento / Enviar Comprovante'
+    : 'Finalizar pedido';
+  $('#pix-copy-paste').value = PIX_COPY_PASTE;
+  $('#copy-pix-button').disabled = !PIX_COPY_PASTE;
+  $('#pix-configuration-message').classList.toggle('hidden', Boolean(PIX_COPY_PASTE && PIX_QR_CODE_URL));
+
+  const qrCode = $('#pix-qr-code');
+  const qrPlaceholder = $('#pix-qr-placeholder');
+  if (PIX_QR_CODE_URL) {
+    qrCode.src = PIX_QR_CODE_URL;
+    qrCode.classList.remove('hidden');
+    qrPlaceholder.classList.add('hidden');
+  } else {
+    qrCode.removeAttribute('src');
+    qrCode.classList.add('hidden');
+    qrPlaceholder.textContent = 'QR Code Pix ainda não configurado.';
+    qrPlaceholder.classList.remove('hidden');
+  }
+}
+
+$('#payment-method').addEventListener('change', updatePaymentMethod);
+$('#copy-pix-button').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(PIX_COPY_PASTE);
+    $('#pix-copy-message').textContent = 'Código Pix copiado.';
+  } catch (error) {
+    console.error('Não foi possível copiar o código Pix:', error);
+    $('#pix-copy-message').textContent = 'Não foi possível copiar automaticamente. Selecione e copie o código acima.';
+    $('#pix-copy-paste').focus();
+    $('#pix-copy-paste').select();
+  }
+});
+
 async function fetchProducts() {
   const { data, error } = await supabase.from('produtos')
     .select('id,nome,descricao,categoria,imagem,precos_produto(unidade,preco,ordem)')
@@ -237,7 +277,12 @@ $('#checkout-form').addEventListener('submit', async (event) => {
   $('#checkout-button').disabled = true;
   $('#checkout-message').classList.add('hidden');
   const note = $('#customer-note').value.trim();
+  const frequency = $('#order-frequency').value;
+  const paymentMethod = $('#payment-method').value;
   try {
+    if (paymentMethod === 'pix' && (!PIX_COPY_PASTE || !PIX_QR_CODE_URL)) {
+      throw new Error('O pagamento por Pix ainda não está configurado com o código e o QR Code. Escolha dinheiro na entrega ou tente novamente mais tarde.');
+    }
     if (!customerProfile) {
       throw new Error('Não foi possível carregar seu perfil. Atualize a página ou complete seus dados em Meu perfil.');
     }
@@ -270,6 +315,9 @@ $('#checkout-form').addEventListener('submit', async (event) => {
       ...lines,
       '',
       `Total estimado: ${formatMoney(data.total)}`,
+      `Frequência: ${frequency}`,
+      `Forma de pagamento: ${paymentMethod === 'pix' ? 'Pix' : 'Dinheiro na entrega'}`,
+      ...(paymentMethod === 'pix' ? ['', 'ATENÇÃO: cliente informou que realizou o pagamento via Pix. Peça o envio do comprovante nesta conversa e confira-o antes de confirmar o pedido.'] : []),
       '',
       'DADOS PARA ENTREGA',
       `Rua: ${street}, Número: ${houseNumber}`,
@@ -300,6 +348,7 @@ $('#logout-button').addEventListener('click', async () => {
 });
 
 renderCart();
+updatePaymentMethod();
 fetchProducts();
 
 async function fillCheckoutFromProfile() {
