@@ -52,6 +52,8 @@ Confirme também que `public.profiles` tem as colunas `user_id`, `full_name` e `
 
 O navegador também verifica sessão e papel antes de exibir as páginas privadas. As políticas RLS são a proteção efetiva dos dados: somente `admin` pode inserir, editar ou excluir produtos e imagens, mesmo que alguém tente chamar o Supabase diretamente.
 
+Na tela do cliente, a imagem `assets/qrcodepix.jpeg` é exibida como QR Code Pix. Antes de habilitar pedidos por Pix, configure também o código Pix Copia e Cola correspondente em `PIX_COPY_PASTE` de `js/client.js`; o checkout bloqueia o Pix enquanto esse código estiver vazio.
+
 ## Catálogo e pedidos
 
 A tabela `produtos` guarda os dados gerais do produto; cada opção de venda fica em `precos_produto`, relacionada por `produto_id` e contendo `unidade`, `preco` e `ordem`. Assim, um produto pode oferecer, por exemplo, `Caixa 20kg` e `Kg`. O painel permite cadastrar várias opções, e o cliente escolhe qual delas adicionar ao carrinho. A proprietária pode cadastrar uma URL de imagem ou enviar um arquivo de até 5 MB; os arquivos ficam no bucket `product-images`.

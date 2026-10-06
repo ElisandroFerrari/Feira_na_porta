@@ -5,7 +5,7 @@ const CART_STORAGE_KEY = 'feira-na-porta-cart-v2';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=700&q=80';
 // Configure both values with matching Pix payment details before enabling Pix checkout.
 const PIX_COPY_PASTE = '';
-const PIX_QR_CODE_URL = '';
+const PIX_QR_CODE_URL = 'assets/qrcodepix.jpeg';
 let products = [];
 let cart = loadCart();
 let checkoutBusy = false;
