@@ -2,7 +2,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 export const SUPABASE_URL = 'https://nhymrdfcrcrmwppdqsgo.supabase.co';
 export const SUPABASE_ANON_KEY = 'sb_publishable_c2p4AtY9gWQYyJ9PGNfr5w_CuIY4zU2';
-export const WHATSAPP_NUMBER = '5551997850439';
+export const WHATSAPP_NUMBER = '555197850439';
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export async function whatsappNumber() {

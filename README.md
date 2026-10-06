@@ -8,7 +8,7 @@ Os layouts adaptam o grid do catálogo, cabeçalhos, formulários e tabelas a te
 
 ## Configuração do Supabase
 
-1. Execute [`supabase/schema.sql`](./supabase/schema.sql) no SQL Editor do projeto. O script cria os perfis e o perfil automático de novos usuários, migra os preços e unidades existentes para a tabela relacionada `precos_produto`, cria os campos de perfil e o histórico de pedidos, configura o bucket público de imagens e restringe operações de escrita a administradores. Execute a versão atualizada do script para habilitar os novos recursos.
+1. Execute [`supabase/schema.sql`](./supabase/schema.sql) no SQL Editor do projeto. O script cria os perfis e o perfil automático de novos usuários, migra os preços e unidades existentes para a tabela relacionada `precos_produto`, cria os campos de perfil e o histórico de pedidos, atualiza o telefone de contato administrativo de teste se ainda estiver cadastrado, configura o bucket público de imagens e restringe operações de escrita a administradores. Execute a versão atualizada do script para habilitar os novos recursos.
 2. Cadastre a proprietária em `index.html` ou em **Authentication → Users**. No SQL Editor, promova somente a conta dela ao papel administrativo, substituindo o e-mail no comando:
 
    ```sql

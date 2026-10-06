@@ -15,6 +15,11 @@ alter table public.profiles
   add column if not exists neighborhood text not null default '',
   add column if not exists city text not null default '';
 
+update public.profiles
+set phone = '51 9785-0439'
+where role = 'admin'
+  and regexp_replace(coalesce(phone, ''), '[^0-9]', '', 'g') = '51998807209';
+
 alter table public.profiles enable row level security;
 drop policy if exists "Users can read their own profile" on public.profiles;
 create policy "Users can read their own profile"
