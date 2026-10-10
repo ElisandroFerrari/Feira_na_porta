@@ -84,7 +84,8 @@ function renderProducts() {
 
     const bottom = document.createElement('div');
     bottom.className = 'mt-3 flex flex-col gap-2.5 sm:mt-4';
-    let selectedPrice = prices[0];
+    const defaultIndex = Math.max(0, prices.findIndex((option) => option.unidade.trim().toLocaleLowerCase('pt-BR') === 'kg'));
+    let selectedPrice = prices[defaultIndex];
     if (prices.length > 1) {
       const priceLabel = document.createElement('label');
       priceLabel.className = 'text-xs font-semibold text-forest-900/70';
@@ -95,6 +96,7 @@ function renderProducts() {
         const item = document.createElement('option');
         item.value = String(index);
         item.textContent = `${option.unidade} — ${formatMoney(option.preco)}`;
+        item.selected = index === defaultIndex;
         priceSelect.append(item);
       });
       priceSelect.addEventListener('change', () => {
