@@ -466,10 +466,10 @@ begin
 
   delete from public.precos_produto where produto_id = saved_product_id;
   insert into public.precos_produto (produto_id, unidade, preco, ordem)
-  select saved_product_id, trim(price.unidade), price.preco, (price.ordinality - 1)::integer
-  from jsonb_to_recordset(p_precos) with ordinality
-    as price(unidade text, preco numeric, ordinality bigint)
-  order by price.ordinality;
+  select saved_product_id, trim(price.unidade), price.preco, (price_data.ordinality - 1)::integer
+  from jsonb_array_elements(p_precos) with ordinality as price_data(item, ordinality)
+  cross join lateral jsonb_to_record(price_data.item) as price(unidade text, preco numeric)
+  order by price_data.ordinality;
 
   return saved_product_id;
 end;
