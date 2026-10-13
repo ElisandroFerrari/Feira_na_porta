@@ -32,7 +32,7 @@ function clearForm() {
   setError($('#form-error'), '');
 }
 
-const PRICE_TYPES = ['Caixa', 'Kg', 'Unidade', 'Maço', 'Litro', 'Outro'];
+const PRICE_TYPES = ['Caixa', 'Kg', 'Grama', 'Unidade', 'Maço', 'Litro', 'Outro'];
 
 function addPriceRow(price = {}) {
   const row = document.createElement('div');
@@ -92,11 +92,15 @@ function addPriceRow(price = {}) {
     : savedUnit === savedType ? '' : savedUnit.slice(savedType.length).trim();
 
   const updateDetail = () => {
-    const show = type.value === 'Caixa' || type.value === 'Outro';
+    const show = ['Caixa', 'Grama', 'Outro'].includes(type.value);
     customLabel.classList.toggle('hidden', !show);
-    detailTitle.textContent = type.value === 'Caixa' ? 'Detalhe (opcional)' : 'Nome da unidade';
-    detail.placeholder = type.value === 'Caixa' ? 'Ex.: 20kg' : 'Ex.: dúzia';
-    detail.required = type.value === 'Outro';
+    detailTitle.textContent = type.value === 'Caixa'
+      ? 'Detalhe (opcional)'
+      : type.value === 'Grama' ? 'Peso' : 'Nome da unidade';
+    detail.placeholder = type.value === 'Caixa'
+      ? 'Ex.: 20kg'
+      : type.value === 'Grama' ? 'Ex.: 500g ou 50g' : 'Ex.: dúzia';
+    detail.required = type.value === 'Outro' || type.value === 'Grama';
   };
   type.addEventListener('change', updateDetail);
   updateDetail();
@@ -526,7 +530,7 @@ form.addEventListener('submit', async (event) => {
     const prices = [...$('#prices-container').querySelectorAll('[data-price-row]')].map((row) => {
       const type = row.querySelector('[data-price-type]').value;
       const detail = row.querySelector('[data-price-detail]').value.trim();
-      const unidade = type === 'Outro' ? detail : type === 'Caixa' && detail ? `${type} ${detail}` : type;
+      const unidade = type === 'Outro' ? detail : ['Caixa', 'Grama'].includes(type) && detail ? `${type} ${detail}` : type;
       return { unidade, preco: Number(row.querySelector('[data-price-amount]').value) };
     });
     if (!prices.length) throw new Error('Adicione pelo menos uma opção de preço.');

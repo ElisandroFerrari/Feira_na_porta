@@ -3,6 +3,7 @@ import { formatMoney, safeImageUrl, supabase, whatsappNumber } from './supabase.
 const $ = (selector) => document.querySelector(selector);
 const CART_STORAGE_KEY = 'feira-na-porta-cart-v2';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=700&q=80';
+const productModal = $('#product-image-modal');
 // Configure both values with matching Pix payment details before enabling Pix checkout.
 const PIX_COPY_PASTE = '00020126330014br.gov.bcb.pix0111038098980825204000053039865802BR5918JULIA COSTA WERHLI6009TRAMANDAI62580520SAN2026100603343772450300017br.gov.bcb.brcode01051.0.0630458F1';
 const PIX_QR_CODE_URL = 'assets/qrcodepix.jpeg';
@@ -10,6 +11,43 @@ let products = [];
 let cart = loadCart();
 let checkoutBusy = false;
 let customerProfile = null;
+
+function openProductModal(product) {
+  const image = $('[data-product-modal-image]');
+  image.src = safeImageUrl(product.imagem) || FALLBACK_IMAGE;
+  image.alt = product.nome;
+  image.onerror = () => {
+    image.onerror = null;
+    image.src = FALLBACK_IMAGE;
+  };
+
+  $('[data-product-modal-category]').textContent = product.categoria || 'Outros';
+  $('[data-product-modal-title]').textContent = product.nome;
+  const description = $('[data-product-modal-description]');
+  description.textContent = product.descricao || 'Este produto não possui descrição.';
+
+  const prices = [...(product.precos_produto || [])]
+    .sort((first, second) => (first.ordem ?? 0) - (second.ordem ?? 0));
+  const priceList = $('[data-product-modal-prices]');
+  priceList.replaceChildren();
+  prices.forEach((option) => {
+    const item = document.createElement('li');
+    item.className = 'flex justify-between gap-4 border-t border-forest-900/10 pt-2';
+    const unit = document.createElement('span');
+    unit.textContent = option.unidade;
+    const amount = document.createElement('span');
+    amount.textContent = formatMoney(option.preco);
+    item.append(unit, amount);
+    priceList.append(item);
+  });
+
+  productModal.showModal();
+}
+
+$('[data-product-modal-close]').addEventListener('click', () => productModal.close());
+productModal.addEventListener('click', (event) => {
+  if (event.target === productModal) productModal.close();
+});
 
 function loadCart() {
   try {
@@ -48,9 +86,15 @@ function renderProducts() {
     image.loading = 'lazy';
     image.src = safeImageUrl(product.imagem) || FALLBACK_IMAGE;
     image.addEventListener('error', () => { image.src = FALLBACK_IMAGE; }, { once: true });
-    imageWrap.append(image);
+    const imageButton = document.createElement('button');
+    imageButton.type = 'button';
+    imageButton.className = 'product-image-trigger';
+    imageButton.setAttribute('aria-label', `Visualizar imagem e detalhes de ${product.nome}`);
+    imageButton.addEventListener('click', () => openProductModal(product));
+    imageButton.append(image);
+    imageWrap.append(imageButton);
     const category = document.createElement('span');
-    category.className = 'absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-forest-700 shadow-sm sm:left-3 sm:top-3 sm:px-3 sm:text-xs';
+    category.className = 'pointer-events-none absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-forest-700 shadow-sm sm:left-3 sm:top-3 sm:px-3 sm:text-xs';
     category.textContent = product.categoria || 'Outros';
     imageWrap.append(category);
     const content = document.createElement('div');
