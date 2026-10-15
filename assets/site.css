@@ -231,6 +231,17 @@ html[data-theme="dark"] table thead {
 html[data-theme="dark"] .shadow-card {
   box-shadow: 0 12px 36px rgba(0, 0, 0, .22);
 }
+@media (max-width: 40rem) {
+  html[data-theme="dark"] .admin-table tbody tr {
+    border-color: rgba(229, 238, 232, .16);
+  }
+  html[data-theme="dark"] .admin-table tbody td {
+    border-top-color: rgba(229, 238, 232, .12);
+  }
+  html[data-theme="dark"] .admin-table tbody td[data-label]::before {
+    color: #a8c9ad;
+  }
+}
 
 @media (min-width: 30rem) {
   .product-grid {
@@ -252,6 +263,49 @@ html[data-theme="dark"] .shadow-card {
 }
 
 @media (max-width: 40rem) {
+  .admin-table-wrap {
+    overflow: visible;
+    border: 0;
+  }
+  .admin-table {
+    display: block;
+    min-width: 0;
+  }
+  .admin-table thead {
+    display: none;
+  }
+  .admin-table tbody {
+    display: grid;
+    gap: .75rem;
+  }
+  .admin-table tbody tr {
+    display: block;
+    overflow: hidden;
+    border: 1px solid rgba(33, 53, 42, .1);
+    border-radius: 1rem;
+  }
+  .admin-table tbody tr + tr {
+    border-top: 0;
+  }
+  .admin-table tbody td {
+    display: block;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    border-top: 1px solid rgba(33, 53, 42, .08);
+    padding: .75rem;
+  }
+  .admin-table tbody td:first-child {
+    border-top: 0;
+  }
+  .admin-table tbody td[data-label]::before {
+    display: block;
+    margin-bottom: .25rem;
+    color: rgba(33, 53, 42, .6);
+    content: attr(data-label);
+    font-size: .6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
   .product-modal-layout {
     grid-template-columns: minmax(0, 1fr);
     gap: 1rem;

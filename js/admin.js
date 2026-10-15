@@ -204,10 +204,11 @@ async function loadProducts() {
   renderProducts(data || []);
 }
 
-function tableCell(text, className = 'p-3 align-top') {
+function tableCell(text, className = 'p-3 align-top', label) {
   const cell = document.createElement('td');
   cell.className = className;
   cell.textContent = text || '—';
+  if (label) cell.dataset.label = label;
   return cell;
 }
 
@@ -232,10 +233,11 @@ function renderOrders(orders) {
   orders.forEach((order) => {
     const row = document.createElement('tr');
     const date = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(order.created_at));
-    row.append(tableCell(`#${order.id.slice(0, 8)}\n${date}`, 'whitespace-pre-line p-3 align-top'));
+    row.append(tableCell(`#${order.id.slice(0, 8)}\n${date}`, 'whitespace-pre-line p-3 align-top', 'Pedido / data'));
 
     const customerCell = document.createElement('td');
     customerCell.className = 'p-3 align-top';
+    customerCell.dataset.label = 'Cliente';
     const customerName = document.createElement('p');
     customerName.className = 'font-semibold text-forest-900';
     customerName.textContent = order.customer_name || 'Cliente';
@@ -248,11 +250,12 @@ function renderOrders(orders) {
     const itemList = (Array.isArray(order.items) ? order.items : [])
       .map((item) => `${item.quantidade} × ${item.nome} (${item.unidade}) — ${formatMoney(item.subtotal)}`)
       .join('\n');
-    row.append(tableCell(itemList, 'whitespace-pre-line p-3 align-top'));
-    row.append(tableCell(formatMoney(order.total), 'p-3 align-top font-bold text-forest-900'));
+    row.append(tableCell(itemList, 'whitespace-pre-line p-3 align-top', 'Produtos'));
+    row.append(tableCell(formatMoney(order.total), 'p-3 align-top font-bold text-forest-900', 'Total'));
 
     const deliveryCell = document.createElement('td');
     deliveryCell.className = 'p-3 align-top';
+    deliveryCell.dataset.label = 'Entrega';
     const address = document.createElement('p');
     address.textContent = formatAddress(order);
     const phone = document.createElement('p');
@@ -266,6 +269,7 @@ function renderOrders(orders) {
 
     const statusCell = document.createElement('td');
     statusCell.className = 'p-3 align-top';
+    statusCell.dataset.label = 'Status / ações';
     const status = document.createElement('span');
     const renderStatus = () => {
       status.className = ORDER_STATUS_CLASSES[order.status] || ORDER_STATUS_CLASSES.pending;
@@ -348,10 +352,10 @@ function renderCustomers(customers) {
   customers.forEach((customer) => {
     const row = document.createElement('tr');
     row.append(
-      tableCell(customer.full_name),
-      tableCell(customer.email),
-      tableCell(customer.phone),
-      tableCell(formatAddress(customer))
+      tableCell(customer.full_name, 'p-3 align-top', 'Nome'),
+      tableCell(customer.email, 'p-3 align-top', 'E-mail'),
+      tableCell(customer.phone, 'p-3 align-top', 'Telefone'),
+      tableCell(formatAddress(customer), 'p-3 align-top', 'Endereço')
     );
     tbody.append(row);
   });
